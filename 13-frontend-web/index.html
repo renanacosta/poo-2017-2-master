@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Contatos</title>
+  </head>
+  <body>
+    <h1>Contatos</h1>
+
+    <button>Carregar contatos</button>
+
+    <table>
+      <thead>
+        <th>Nome</th>
+        <th>Telefone</th>
+        <th>E-mail</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Márcio</td>
+          <td>887755332</td>
+          <td>marcio@m.com</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+    const button = document.querySelector('button');
+    const tbody = document.querySelector('tbody');
+    button.addEventListener('click', carregaContatos);
+    function carregaContatos() {
+      const ajax = new XMLHttpRequest();
+      const endpoint = 'http://localhost:4567/contatos';
+      ajax.addEventListener('load', function() {
+        // TODO: aqui vem o conteúdo!
+        renderizaResposta(JSON.parse(ajax.response));
+      });
+      ajax.open('GET', endpoint);
+      ajax.send();
+    }
+
+    const html = (content) => {td: () => `<td>${content}</td>`};
+
+    function renderizaResposta(json) {
+      let conteudo = '';
+      for (let o of json) {
+        conteudo += '<tr>';
+        conteudo += '<td>' + o.nome + '</td>';
+        conteudo += '<td>' + o.telefone + '</td>';
+        conteudo += '<td>' + o.email + '</td>';
+        conteudo += '</tr>';
+      }
+      tbody.innerHTML = conteudo;
+    }
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
