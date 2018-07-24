@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Contatos</title>
+    <style>
+      * {
+        font-family: sans-serif;
+        font-size: 14pt;
+      }
+      label {
+        display: block;
+        margin-top: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Contatos</h1>
+
+    <form>
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome"
+        size="50" maxlength="50" required autofocus>
+      <label for="telefone">Telefone:</label>
+      <input type="tel" id="telefone" name="telefone"
+        size="15" maxlength="15">
+      <label for="email">E-mail:</label>
+      <input type="email" id="email" name="email"
+        size="50" maxlength="100">
+      <br><br>
+      <input type="submit" value="Salvar" />
+    </form>
+
+    <button>Carregar contatos</button>
+
+    <table>
+      <thead>
+        <th>Nome</th>
+        <th>Telefone</th>
+        <th>E-mail</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Márcio</td>
+          <td>887755332</td>
+          <td>marcio@m.com</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+    // READ
+    // carregar os contatos assim que carregar todo o conteúdo
+    document.addEventListener('DOMContentLoaded', function() {
+      carregaContatos();
+    });
+
+    const button = document.querySelector('button');
+    const tbody = document.querySelector('tbody');
+    button.addEventListener('click', carregaContatos);
+    function carregaContatos() {
+      const ajax = new XMLHttpRequest();
+      const endpoint = 'http://localhost:4567/contatos';
+      ajax.addEventListener('load', function() {
+        // TODO: aqui vem o conteúdo!
+        renderizaResposta(JSON.parse(ajax.response));
+      });
+      ajax.open('GET', endpoint);
+      ajax.send();
+    }
+
+    function renderizaResposta(json) {
+      let conteudo = '';
+      for (let o of json) {
+        conteudo += '<tr>';
+        conteudo += '<td>' + o.nome + '</td>';
+        conteudo += '<td>' + o.telefone + '</td>';
+        conteudo += '<td>' + o.email + '</td>';
+        conteudo += '</tr>';
+      }
+      tbody.innerHTML = conteudo;
+    }
+
+    </script>
+
+    <script>
+    // CREATE
+    // detectar a submissão do formulário
+    document.forms[0].addEventListener('submit', create);
+    // função que cria um objeto contato e submete
+    function create(e) {
+      // objeto contato
+      let o = {
+        nome: this.nome.value,
+        telefone: this.telefone.value,
+        email: this.email.value
+      };
+      // equivalente ao System.out.println
+      console.log(o);
+      // ajax para enviar o json para o servidor
+      let ajax = new XMLHttpRequest();
+      ajax.open('POST', 'http://localhost:4567/contato');
+      ajax.send(JSON.stringify(o));
+      // não propagar o evento
+      e.preventDefault();
+    }
+    </script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
